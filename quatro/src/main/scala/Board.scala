@@ -14,6 +14,7 @@ class Board() {
   }
 
   def placePiece(piece: Piece, x: Int, y: Int): Unit = {
+    // TODO: check if the spot is empty
     this._board(y)(x) = Some(piece)
   }
 

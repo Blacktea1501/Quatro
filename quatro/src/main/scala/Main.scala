@@ -11,9 +11,6 @@
 
 // Goal is to get 4 pieces in a row that share a common attribute.
 // Visiual
-
-import Piece.Piece
-import Board.Board
 //    |-----|-----|-----|-----|
 //  4 |((1))|     |     |     |
 //    |-----|-----|-----|-----|
@@ -24,6 +21,9 @@ import Board.Board
 //  1 |     |     |     |     |
 //    |-----|-----|-----|-----|
 //      A     B     C     D
+
+import Piece.Piece
+import Board.Board
 
 
 final val RED = "\u001b[31m"
@@ -53,8 +53,7 @@ def printPieceOnBoard(): Unit = {
   println(board)
 }
 
-
-
 @main
 def main(): Unit =
+  printEveryPiece()
   printPieceOnBoard()
