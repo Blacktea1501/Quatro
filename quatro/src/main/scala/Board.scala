@@ -14,7 +14,12 @@ class Board() {
   }
 
   def placePiece(piece: Piece, x: Int, y: Int): Unit = {
-    // TODO: check if the spot is empty
+    if (this._board(y)(x).isDefined) {
+      // reprint the board
+      println(this.toString());
+      println("Spot is already taken")
+      return
+    } 
     this._board(y)(x) = Some(piece)
   }
 

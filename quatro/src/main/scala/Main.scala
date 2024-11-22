@@ -55,5 +55,10 @@ def printPieceOnBoard(): Unit = {
 
 @main
 def main(): Unit =
-  printEveryPiece()
-  printPieceOnBoard()
+  // place pieces on the same place on the board
+  val piece1 = Piece(true, true, true, true)
+  val piece2 = Piece(true, true, true, true)
+  val board = Board()
+  board.placePiece(piece1, 0, 0)
+  board.placePiece(piece2, 0, 0)
+  println(board)
