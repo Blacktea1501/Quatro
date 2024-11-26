@@ -25,40 +25,14 @@
 import Piece.Piece
 import Board.Board
 
-
-final val RED = "\u001b[31m"
-final val BLUE = "\u001b[34m"
-
-def printEveryPiece(): Unit = {
-  for (i <- 0 to 15) {
-    val shape = if i % 4 < 2 then true else false
-    val hollow = if i % 8 < 4 then true else false
-    val size = if i % 2 == 0 then true else false
-    val color = if i < 8 then true else false
-    val piece = Piece(color, size, shape, hollow)
-    println(piece)
-  }
-}
-
-def printPieceOnBoard(): Unit = {
-  var board = Board()
-  for (i <- 0 to 15) {
-    val shape = if i % 4 < 2 then true else false
-    val hollow = if i % 8 < 4 then true else false
-    val size = if i % 2 == 0 then true else false
-    val color = if i < 8 then true else false
-    val piece = Piece(color, size, shape, hollow)
-    board.placePiece(piece, i % 4, i / 4)
-  }
-  println(board)
-}
-
 @main
 def main(): Unit =
-  // place pieces on the same place on the board
-  val piece1 = Piece(true, true, true, true)
-  val piece2 = Piece(true, true, true, true)
-  val board = Board()
-  board.placePiece(piece1, 0, 0)
-  board.placePiece(piece2, 0, 0)
-  println(board)
+
+  // create a new board
+  var board = Board()
+  var player1 = initPlayer(true) 
+  var player2 = initPlayer(false)
+
+  // print the players
+  printPlayer(player1)
+  printPlayer(player2)

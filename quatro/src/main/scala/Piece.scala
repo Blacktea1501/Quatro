@@ -1,5 +1,6 @@
 package Piece
 
+// constructor
 class Piece(
     val color: Boolean,
     val size: Boolean,
@@ -7,7 +8,6 @@ class Piece(
     val hollow: Boolean
 ):
 
-  // constructor
   private val _color: Boolean = color
   private val _size: Boolean = size
   private val _shape: Boolean = shape
