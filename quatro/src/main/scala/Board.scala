@@ -13,12 +13,14 @@ class Board() {
 
     if (row < 0 || row > 3 || col < 0 || col > 3) {
       // reprint the board and print an error message
+      print("\u001b[2J")
       println(this.toString());
       println("Invalid row or column");
       return
     }
 
     if (this._board(row)(col).isDefined) {
+      print("\u001b[2J")
       println(this.toString());
       println("Spot is already taken");
       return
@@ -26,6 +28,7 @@ class Board() {
     this._board(row)(col) = Some(piece)
 
   }
+
 
   def checkRowWin(_row: Int): Boolean = {
     if (_row < 0 || _row > 3) {
@@ -80,26 +83,14 @@ class Board() {
       return false;
     }
 
-    if (
-      diag1.map(_.getColorBoolean()).toSet.size == 1 ||
+    return diag1.map(_.getColorBoolean()).toSet.size == 1 ||
       diag1.map(_.getShapeBoolean()).toSet.size == 1 ||
       diag1.map(_.getHollowBoolean()).toSet.size == 1 ||
-      diag1.map(_.getSizeBoolean()).toSet.size == 1
-    ) {
-      return true;
-    }
-
-    if (
+      diag1.map(_.getSizeBoolean()).toSet.size == 1 ||
       diag2.map(_.getColorBoolean()).toSet.size == 1 ||
       diag2.map(_.getShapeBoolean()).toSet.size == 1 ||
       diag2.map(_.getHollowBoolean()).toSet.size == 1 ||
       diag2.map(_.getSizeBoolean()).toSet.size == 1
-    ) {
-      return true;
-    }
-
-    return false;
-
   }
 
   override def toString(): String = {
