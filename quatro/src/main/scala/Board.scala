@@ -9,24 +9,28 @@ class Board() {
       .ofDim[Option[Piece]](4, 4)
       .map(_ => Array.ofDim[Option[Piece]](4).map(_ => None))
 
-  def placePiece(piece: Piece, row: Int, col: Int): Unit = {
+  /**
+    *
+    *
+    * @param piece the piece to place
+    * @param row the row to place the piece
+    * @param col the column to place the piece
+    * @return true if the piece was placed, false otherwise
+    */
+  def placePiece(piece: Piece, row: Int, col: Int): Boolean = {
 
     if (row < 0 || row > 3 || col < 0 || col > 3) {
-      // reprint the board and print an error message
-      print("\u001b[2J")
-      println(this.toString());
-      println("Invalid row or column");
-      return
+      println("Invalid position");
+      return false
     }
 
     if (this._board(row)(col).isDefined) {
-      print("\u001b[2J")
-      println(this.toString());
       println("Spot is already taken");
-      return
+      return false  
     }
-    this._board(row)(col) = Some(piece)
 
+    this._board(row)(col) = Some(piece)
+    true
   }
 
 

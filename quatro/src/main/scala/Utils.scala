@@ -31,7 +31,7 @@ def clearScreen(): Unit = {
 }
 
 def traslatePosition(s: String): (Int, Int) = {
-  val col = s(0) match {
+  val col = s(0).toUpper match {
     case 'A' => 0
     case 'B' => 1
     case 'C' => 2
@@ -46,6 +46,31 @@ def traslatePosition(s: String): (Int, Int) = {
     case '4' => 0
     case _   => -1
   }
-
   (row, col)
+}
+
+def playerMove(
+    board: Board,
+    player: Array[Piece],
+    playerNum: Int
+): Array[Piece] = {
+
+  // just a placeholder because the while loop will overwrite it anyways before we filter it out
+  var piece = Piece(true, true, true, true)
+  var placed = false
+  while (!placed) {
+    println(s"Player $playerNum, place a piece")
+    var input = ""
+    while (input.length() < 3) {
+      input = scala.io.StdIn.readLine()
+      if (input.length() < 3) { println("invalid input") }
+    }
+    // split the input into the position and the piece number
+    var (row, col) = traslatePosition(input.split(" ")(0))
+    piece = player(input.substring(2).trim().toInt)
+    placed = board.placePiece(piece, row, col)
+  }
+
+  val _player = player.filter(_ != piece)
+  return _player
 }

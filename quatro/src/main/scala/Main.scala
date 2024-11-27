@@ -34,8 +34,6 @@ def main(): Unit =
   var player1 = initPlayer(true)
   var player2 = initPlayer(false)
 
-  var gameover = false
-
   println("Welcome to Quatro!")
   println("Player 1 is Red and Player 2 is Blue")
   println("Player 1 goes first")
@@ -48,49 +46,36 @@ def main(): Unit =
   println()
   println()
 
+  var gameover = false
   while (!gameover) {
     // print the players
     println(board)
     printPlayer(player1)
     printPlayer(player2)
-    
-    // get the player's move
-    println("Player 1, place a piece")
-    var input = scala.io.StdIn.readLine()
-    var (row, col) = traslatePosition(input.substring(0, 2))
-    var piece = player1(input.substring(2).trim().toInt)
-    board.placePiece(piece, row, col)
-    player1 = player1.filter(_ != piece)
+    player1 = playerMove(board, player1, 1)
 
-    // check if player 1 won
-    if (board.checkRowWin(row) || board.checkColWin(col) || board.checkDiagWin()) {
-      clearScreen()
-      println(board)
-      println("Player 1 wins!")
-      return
+    // check win condition 
+    for (i <- 0 to 3) {
+      if (board.checkRowWin(i) || board.checkColWin(i) || i == 0 && board.checkDiagWin()) {
+        println("Player 1 wins!")
+        gameover = true
+      }
     }
-
-    // print the players
+     
     clearScreen()
     println(board)
     printPlayer(player1)
     printPlayer(player2)
-    
-    // get the player's move
-    println("Player 2, place a piece")
-    input = scala.io.StdIn.readLine()
-    var (row2, col2) = traslatePosition(input.substring(0, 2))
-    piece = player2(input.substring(2).trim().toInt)
-    board.placePiece(piece, row2, col2)
 
-    player2 = player2.filter(_ != piece)
 
-    // check if player 2 won
-    if (board.checkRowWin(row2) || board.checkColWin(col2) || board.checkDiagWin()) {
-      clearScreen()
-      println(board)
-      println("Player 2 wins!")
-      return
+
+    player2 = playerMove(board, player2, 2)
+    for (i <- 0 to 3) {
+      if (board.checkRowWin(i) || board.checkColWin(i) || i == 0 && board.checkDiagWin()) {
+        println("Player 2 wins!")
+        gameover = true
+      }
     }
     clearScreen()
+
   }
