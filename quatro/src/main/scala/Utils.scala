@@ -94,9 +94,9 @@ def checkWin(board: Board, idx: Int, col: Boolean): Boolean = {
     return false
   }
 
-  return arr.map(_.getColorBoolean()).toSet.size == 1 |
-    arr.map(_.getShapeBoolean()).toSet.size == 1 |
-    arr.map(_.getHollowBoolean()).toSet.size == 1 |
+  return arr.map(_.getColorBoolean()).toSet.size == 1 ||
+    arr.map(_.getShapeBoolean()).toSet.size == 1 ||
+    arr.map(_.getHollowBoolean()).toSet.size == 1 ||
     arr.map(_.getSizeBoolean()).toSet.size == 1
 }
 
@@ -119,12 +119,12 @@ def checkDiagWin(board: Board): Boolean = {
     return false
   }
 
-  return diag1.map(_.getColorBoolean()).toSet.size == 1 |
-    diag1.map(_.getShapeBoolean()).toSet.size == 1 |
+  return diag1.map(_.getColorBoolean()).toSet.size == 1 ||
+    diag1.map(_.getShapeBoolean()).toSet.size == 1 ||
     diag1.map(_.getHollowBoolean()).toSet.size == 1 |
-    diag1.map(_.getSizeBoolean()).toSet.size == 1 |
-    diag2.map(_.getColorBoolean()).toSet.size == 1 |
-    diag2.map(_.getShapeBoolean()).toSet.size == 1 |
-    diag2.map(_.getHollowBoolean()).toSet.size == 1 |
+    diag1.map(_.getSizeBoolean()).toSet.size == 1 ||
+    diag2.map(_.getColorBoolean()).toSet.size == 1 ||
+    diag2.map(_.getShapeBoolean()).toSet.size == 1 ||
+    diag2.map(_.getHollowBoolean()).toSet.size == 1 ||
     diag2.map(_.getSizeBoolean()).toSet.size == 1
 }
