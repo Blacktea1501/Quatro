@@ -24,58 +24,48 @@
 
 import Piece.Piece
 import Board.Board
+import scala.util.boundary
 
 @main
 def main(): Unit =
   clearScreen()
-
   // create a new board
   var board = Board()
   var player1 = initPlayer(true)
   var player2 = initPlayer(false)
 
-  println("Welcome to Quatro!")
-  println("Player 1 is Red and Player 2 is Blue")
-  println("Player 1 goes first")
-  println(
-    "To place a piece, type the position (e.g. A1) and the piece number (e.g. 0)"
-  )
-  println("To win, get 4 pieces in a row that share a common attribute")
-
-  println()
-  println()
-  println()
+  println("""Welcome to Quatro!
+    |Player 1 is Red and Player 2 is Blue
+    |Player 1 goes first
+    |To place a piece, type the position (e.g. A1) and the piece number (e.g. 0)
+    |To win, get 4 pieces in a row that share a common attribute""".stripMargin)
 
   var gameover = false
+  var turn = false
   while (!gameover) {
     // print the players
     println(board)
     printPlayer(player1)
     printPlayer(player2)
-    player1 = playerMove(board, player1, 1)
 
-    // check win condition 
-    for (i <- 0 to 3) {
-      if (board.checkRowWin(i) || board.checkColWin(i) || i == 0 && board.checkDiagWin()) {
-        println("Player 1 wins!")
-        gameover = true
-      }
+    turn match {
+      case false => player1 = playerMove(board, player1, 1)
+      case true  => player2 = playerMove(board, player2, 2)
     }
-     
-    clearScreen()
-    println(board)
-    printPlayer(player1)
-    printPlayer(player2)
 
+    // switch turns
+    turn = !turn
 
-
-    player2 = playerMove(board, player2, 2)
-    for (i <- 0 to 3) {
-      if (board.checkRowWin(i) || board.checkColWin(i) || i == 0 && board.checkDiagWin()) {
-        println("Player 2 wins!")
-        gameover = true
-      }
-    }
     clearScreen()
 
+    for (i <- 0 to 3 if !gameover) {
+      gameover = checkWin(board, i, false) | checkWin( board, i, true) | (i == 1 && checkDiagWin(board))
+    }
+
+    if (gameover) {
+      println(board)
+      printPlayer(player1)
+      printPlayer(player2)
+      println("Player " + (if (turn) 2 else 1) + " wins!")
+    }
   }

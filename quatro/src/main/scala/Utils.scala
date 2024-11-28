@@ -30,7 +30,7 @@ def clearScreen(): Unit = {
   print("\u001b[2J")
 }
 
-def traslatePosition(s: String): (Int, Int) = {
+def translatePosition(s: String): (Int, Int) = {
   val col = s(0).toUpper match {
     case 'A' => 0
     case 'B' => 1
@@ -39,14 +39,14 @@ def traslatePosition(s: String): (Int, Int) = {
     case _   => -1
   }
 
-  val row = s(1) match {
+  val idx = s(1) match {
     case '1' => 3
     case '2' => 2
     case '3' => 1
     case '4' => 0
     case _   => -1
   }
-  (row, col)
+  (idx, col)
 }
 
 def playerMove(
@@ -57,20 +57,74 @@ def playerMove(
 
   // just a placeholder because the while loop will overwrite it anyways before we filter it out
   var piece = Piece(true, true, true, true)
+
   var placed = false
   while (!placed) {
     println(s"Player $playerNum, place a piece")
     var input = ""
-    while (input.length() < 3) {
+
+    while (!input.matches("[A-Da-d][1-4] [0-6]$")) {
       input = scala.io.StdIn.readLine()
-      if (input.length() < 3) { println("invalid input") }
+      if (!input.matches("^[A-Da-d][1-4] [0-6]$")) { 
+        println("invalid input") 
+      }
     }
-    // split the input into the position and the piece number
-    var (row, col) = traslatePosition(input.split(" ")(0))
+
+    var (idx, col) = translatePosition(input.split(" ")(0))
+
     piece = player(input.substring(2).trim().toInt)
-    placed = board.placePiece(piece, row, col)
+    placed = board.placePiece(piece, idx, col)
   }
 
   val _player = player.filter(_ != piece)
   return _player
+}
+
+def checkWin(board: Board, idx: Int, col: Boolean): Boolean = {
+  if (idx < 0 || idx > 3) {
+    return false
+  }
+
+  val arr = col match {
+    case true => board.rotate90().getBoard()(idx).filter(_.isDefined).map(_.get)
+    case false => board.getBoard()(idx).filter(_.isDefined).map(_.get)
+  }
+
+  if (arr.length < 4) {
+    return false
+  }
+
+  return arr.map(_.getColorBoolean()).toSet.size == 1 |
+    arr.map(_.getShapeBoolean()).toSet.size == 1 |
+    arr.map(_.getHollowBoolean()).toSet.size == 1 |
+    arr.map(_.getSizeBoolean()).toSet.size == 1
+}
+
+def checkDiagWin(board: Board): Boolean = {
+  val diag1 = Array(
+    board.getBoard()(0)(0),
+    board.getBoard()(1)(1),
+    board.getBoard()(2)(2),
+    board.getBoard()(3)(3)
+  ).filter(_.isDefined).map(_.get)
+
+  val diag2 = Array(
+    board.getBoard()(0)(3),
+    board.getBoard()(1)(2),
+    board.getBoard()(2)(1),
+    board.getBoard()(3)(0)
+  ).filter(_.isDefined).map(_.get)
+
+  if (diag1.length < 4 && diag2.length < 4) {
+    return false
+  }
+
+  return diag1.map(_.getColorBoolean()).toSet.size == 1 |
+    diag1.map(_.getShapeBoolean()).toSet.size == 1 |
+    diag1.map(_.getHollowBoolean()).toSet.size == 1 |
+    diag1.map(_.getSizeBoolean()).toSet.size == 1 |
+    diag2.map(_.getColorBoolean()).toSet.size == 1 |
+    diag2.map(_.getShapeBoolean()).toSet.size == 1 |
+    diag2.map(_.getHollowBoolean()).toSet.size == 1 |
+    diag2.map(_.getSizeBoolean()).toSet.size == 1
 }
