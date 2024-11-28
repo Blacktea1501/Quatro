@@ -65,8 +65,8 @@ def playerMove(
 
     while (!input.matches("[A-Da-d][1-4] [0-6]$")) {
       input = scala.io.StdIn.readLine()
-      if (!input.matches("^[A-Da-d][1-4] [0-6]$")) { 
-        println("invalid input") 
+      if (!input.matches("^[A-Da-d][1-4] [0-6]$")) {
+        println("invalid input")
       }
     }
 
@@ -127,4 +127,57 @@ def checkDiagWin(board: Board): Boolean = {
     diag2.map(_.getShapeBoolean()).toSet.size == 1 ||
     diag2.map(_.getHollowBoolean()).toSet.size == 1 ||
     diag2.map(_.getSizeBoolean()).toSet.size == 1
+}
+
+def start(): Unit = {
+  // create a new board
+  var board = Board()
+  var player1 = initPlayer(true)
+  var player2 = initPlayer(false)
+
+  println("""Welcome to Quatro!
+    |Player 1 is Red and Player 2 is Blue
+    |Player 1 goes first
+    |To place a piece, type the position (e.g. A1) and the piece number (e.g. 0)
+    |To win, get 4 pieces in a row that share a common attribute""".stripMargin)
+
+  var gameover = false
+  var turn = false
+  while (!gameover) {
+    // print the players
+    println(board)
+    printPlayer(player1)
+    printPlayer(player2)
+
+    turn match {
+      case false => player1 = playerMove(board, player1, 1)
+      case true  => player2 = playerMove(board, player2, 2)
+    }
+
+    clearScreen()
+
+    for (i <- 0 to 3 if !gameover) {
+      gameover = checkWin(board, i, false) | checkWin(
+        board,
+        i,
+        true
+      ) | (i == 1 && checkDiagWin(board))
+    }
+
+    if (gameover) {
+      println(board)
+      printPlayer(player1)
+      printPlayer(player2)
+      println("Player " + (if (turn) 2 else 1) + " wins!")
+    }
+
+    // in case of tie
+    if (player1.length == 0 && player2.length == 0) {
+      gameover = true
+      println("It's a tie!")
+    }
+
+    // switch turns
+    turn = !turn
+  }
 }
