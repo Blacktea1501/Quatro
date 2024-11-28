@@ -53,9 +53,6 @@ def main(): Unit =
       case true  => player2 = playerMove(board, player2, 2)
     }
 
-    // switch turns
-    turn = !turn
-
     clearScreen()
 
     for (i <- 0 to 3 if !gameover) {
@@ -68,4 +65,7 @@ def main(): Unit =
       printPlayer(player2)
       println("Player " + (if (turn) 2 else 1) + " wins!")
     }
+
+    // switch turns
+    turn = !turn
   }
