@@ -1,30 +1,8 @@
 import Board.Board
 import Piece.Piece
+import Player.Player
 
 case class Utils()
-
-def initPlayer(x: Boolean): Array[Piece] = {
-  var player: Array[Piece] = Array.ofDim[Piece](8)
-  for (i <- 0 to 7) {
-    val shape = i % 4 < 2
-    val hollow = i % 8 < 4
-    val size = i % 2 == 0
-    val piece = Piece(x, size, shape, hollow)
-    player(i) = piece
-  }
-  player
-}
-
-def printPlayer(player: Array[Piece]): Unit = {
-  print("[")
-  for (i <- 0 to player.length - 1) {
-    print(i + ": " + player(i))
-    if (i < player.length - 1) {
-      print(", ")
-    }
-  }
-  println("]")
-}
 
 def clearScreen(): Unit = {
   print("\u001b[2J")
@@ -51,9 +29,9 @@ def translatePosition(s: String): (Int, Int) = {
 
 def playerMove(
     board: Board,
-    player: Array[Piece],
+    player: Player,
     playerNum: Int
-): Array[Piece] = {
+): Unit = {
 
   // just a placeholder because the while loop will overwrite it anyways before we filter it out
   var piece = Piece(true, true, true, true)
@@ -63,21 +41,20 @@ def playerMove(
     println(s"Player $playerNum, place a piece")
     var input = ""
 
-    while (!input.matches("[A-Da-d][1-4] [0-6]$")) {
+    while (!input.matches("^[A-Da-d][1-4] [0-7]$")) {
       input = scala.io.StdIn.readLine()
-      if (!input.matches("^[A-Da-d][1-4] [0-6]$")) {
+      if (!input.matches("^[A-Da-d][1-4] [0-7]$")) {
         println("invalid input")
       }
     }
 
     var (idx, col) = translatePosition(input.split(" ")(0))
 
-    piece = player(input.substring(2).trim().toInt)
+    piece = player.getPlayer()(input.substring(2).trim().toInt)
     placed = board.placePiece(piece, idx, col)
   }
 
-  val _player = player.filter(_ != piece)
-  return _player
+  player.setPlayer(player.getPlayer().filter(_ != piece))
 }
 
 def checkWin(board: Board, idx: Int, col: Boolean): Boolean = {
@@ -132,8 +109,8 @@ def checkDiagWin(board: Board): Boolean = {
 def start(): Unit = {
   // create a new board
   var board = Board()
-  var player1 = initPlayer(true)
-  var player2 = initPlayer(false)
+  var player1 = new Player(true)
+  var player2 = new Player(false)
 
   println("""Welcome to Quatro!
     |Player 1 is Red and Player 2 is Blue
@@ -146,33 +123,31 @@ def start(): Unit = {
   while (!gameover) {
     // print the players
     println(board)
-    printPlayer(player1)
-    printPlayer(player2)
+    println(player1)
+    println(player2)
 
     turn match {
-      case false => player1 = playerMove(board, player1, 1)
-      case true  => player2 = playerMove(board, player2, 2)
+      case false => playerMove(board, player1, 1)
+      case true  => playerMove(board, player2, 2)
     }
 
     clearScreen()
 
     for (i <- 0 to 3 if !gameover) {
-      gameover = checkWin(board, i, false) | checkWin(
-        board,
-        i,
-        true
-      ) | (i == 1 && checkDiagWin(board))
+      gameover = checkWin(board, i, false) ||
+                 checkWin( board, i, true) || 
+                 (i == 1 && checkDiagWin(board))
     }
 
     if (gameover) {
       println(board)
-      printPlayer(player1)
-      printPlayer(player2)
+      println(player1)
+      println(player2)
       println("Player " + (if (turn) 2 else 1) + " wins!")
     }
 
     // in case of tie
-    if (player1.length == 0 && player2.length == 0) {
+    if (player1.getPlayer().length == 0 && player2.getPlayer().length == 0) {
       gameover = true
       println("It's a tie!")
     }
