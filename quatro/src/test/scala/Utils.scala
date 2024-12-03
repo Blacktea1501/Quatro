@@ -1,5 +1,6 @@
 import Piece.Piece
 import Board.Board
+import Utils._
 
 class UtilsTest extends munit.FunSuite {
   test("Testing winConditions") {
@@ -43,5 +44,16 @@ class UtilsTest extends munit.FunSuite {
     }
     assert(checkDiagWin(board))
   }
+
+  test("Testing translatePosition") {
+    assertEquals(translatePosition("A1"), (3, 0))
+    assertEquals(translatePosition("B2"), (2, 1))
+    assertEquals(translatePosition("C3"), (1, 2))
+    assertEquals(translatePosition("D4"), (0, 3))
+    assertEquals(translatePosition("g4"), (0, -1))
+    assertEquals(translatePosition("A5"), (-1, 0))
+  }
+
+  // test("")
 
 }

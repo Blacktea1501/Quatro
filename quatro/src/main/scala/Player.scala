@@ -16,13 +16,9 @@ class Player(val isRed: Boolean) {
     pieces(i) = piece
   }
 
-  def getPlayer(): Array[Piece] = {
-    this.pieces
-  }
+  def getPlayer(): Array[Piece] = { this.pieces }
 
-  def setPlayer(pieces: Array[Piece]): Unit = {
-    this.pieces = pieces
-  }
+  def setPlayer(pieces: Array[Piece]): Unit = { this.pieces = pieces }
   
   override def toString: String = {
     var str = "["
